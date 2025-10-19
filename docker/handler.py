@@ -184,6 +184,16 @@ def handler(event):
             print("Downloading models...")
             download_models(input_data["models"])
 
+        # Save reference images if specified
+        if "reference_images" in input_data:
+            print("Saving reference images to input folder...")
+            reference_images = input_data["reference_images"]
+            for filename, image_base64 in reference_images.items():
+                filepath = os.path.join(COMFYUI_INPUT, filename)
+                with open(filepath, "wb") as f:
+                    f.write(base64.b64decode(image_base64))
+                print(f"  Saved: {filepath}")
+
         # Get workflow
         workflow = input_data.get("workflow")
         if not workflow:

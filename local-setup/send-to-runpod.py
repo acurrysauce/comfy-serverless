@@ -27,7 +27,31 @@ def open_image(filepath):
         print(f"Warning: Could not open image: {e}")
 
 
-def send_workflow(workflow_file, models=None, output_dir="./outputs"):
+def upload_reference_images(reference_dir):
+    """
+    Read all images from reference directory and encode as base64
+
+    Returns dict: {filename: base64_data}
+    """
+    reference_images = {}
+
+    if not os.path.exists(reference_dir):
+        return reference_images
+
+    for filename in os.listdir(reference_dir):
+        filepath = os.path.join(reference_dir, filename)
+
+        # Only process image files
+        if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.webp', '.bmp')):
+            with open(filepath, 'rb') as f:
+                image_data = base64.b64encode(f.read()).decode('utf-8')
+                reference_images[filename] = image_data
+                print(f"  Added reference image: {filename}")
+
+    return reference_images
+
+
+def send_workflow(workflow_file, models=None, output_dir="./outputs", reference_dir=None):
     """
     Send workflow to RunPod serverless endpoint
 
@@ -35,6 +59,7 @@ def send_workflow(workflow_file, models=None, output_dir="./outputs"):
         workflow_file: Path to ComfyUI workflow JSON file
         models: Optional dict of models to use
         output_dir: Directory to save output images
+        reference_dir: Optional directory containing reference images to upload
     """
 
     if not RUNPOD_API_KEY:
@@ -62,6 +87,16 @@ def send_workflow(workflow_file, models=None, output_dir="./outputs"):
     # Add models if specified
     if models:
         payload["input"]["models"] = models
+
+    # Add reference images if specified
+    if reference_dir:
+        print(f"\nUploading reference images from: {reference_dir}")
+        reference_images = upload_reference_images(reference_dir)
+        if reference_images:
+            payload["input"]["reference_images"] = reference_images
+            print(f"  Total reference images: {len(reference_images)}")
+        else:
+            print("  No reference images found")
 
     # API endpoint - Queue mode uses api.runpod.ai/v2/{id}/run
     url = f"https://api.runpod.ai/v2/{RUNPOD_ENDPOINT_ID}/run"
@@ -156,22 +191,28 @@ def send_workflow(workflow_file, models=None, output_dir="./outputs"):
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python send-to-runpod.py <workflow.json> [output_dir]")
+        print("Usage: python send-to-runpod.py <workflow.json> [output_dir] [reference_dir]")
         print("")
         print("Environment variables:")
         print("  RUNPOD_API_KEY      - Your RunPod API key")
         print("  RUNPOD_ENDPOINT_ID  - Your RunPod endpoint ID")
         print("")
+        print("Arguments:")
+        print("  workflow.json   - ComfyUI workflow file")
+        print("  output_dir      - Directory to save output images (default: ./outputs)")
+        print("  reference_dir   - Directory with reference images to upload (optional)")
+        print("")
         print("Example:")
         print("  export RUNPOD_API_KEY='your-key'")
         print("  export RUNPOD_ENDPOINT_ID='your-endpoint-id'")
-        print("  python send-to-runpod.py workflow_api.json")
+        print("  python send-to-runpod.py workflow_api.json ./outputs ./samples")
         sys.exit(1)
 
     workflow_file = sys.argv[1]
     output_dir = sys.argv[2] if len(sys.argv) > 2 else "./outputs"
+    reference_dir = sys.argv[3] if len(sys.argv) > 3 else None
 
-    send_workflow(workflow_file, output_dir=output_dir)
+    send_workflow(workflow_file, output_dir=output_dir, reference_dir=reference_dir)
 
 
 if __name__ == "__main__":

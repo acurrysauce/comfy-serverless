@@ -1,0 +1,321 @@
+{
+  "last_node_id": 50,
+  "last_link_id": 100,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "CheckpointLoaderSimple",
+      "pos": [50, 50],
+      "size": [315, 98],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {"name": "MODEL", "type": "MODEL", "links": [1, 20]},
+        {"name": "CLIP", "type": "CLIP", "links": [2, 3, 21, 22]},
+        {"name": "VAE", "type": "VAE", "links": [10, 11, 30, 31]}
+      ],
+      "properties": {"Node name for S&R": "CheckpointLoaderSimple"},
+      "widgets_values": ["v1-5-pruned-emaonly.safetensors"]
+    },
+    {
+      "id": 2,
+      "type": "CLIPTextEncode",
+      "pos": [50, 200],
+      "size": [400, 200],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [{"name": "clip", "type": "CLIP", "link": 2}],
+      "outputs": [{"name": "CONDITIONING", "type": "CONDITIONING", "links": [4]}],
+      "properties": {"Node name for S&R": "CLIPTextEncode"},
+      "widgets_values": ["grass texture, tactical rpg, final fantasy tactics style, pixel art, simple green grass, low detail, flat colors, PSX graphics, 16bit, non-busy, clean, top-down view, seamless tile"],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 3,
+      "type": "CLIPTextEncode",
+      "pos": [50, 450],
+      "size": [400, 200],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [{"name": "clip", "type": "CLIP", "link": 3}],
+      "outputs": [{"name": "CONDITIONING", "type": "CONDITIONING", "links": [5]}],
+      "properties": {"Node name for S&R": "CLIPTextEncode"},
+      "widgets_values": ["photorealistic, 3d, detailed, complex, busy, gradient, smooth, blurry, modern, high resolution, realistic lighting"],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 4,
+      "type": "EmptyLatentImage",
+      "pos": [50, 700],
+      "size": [315, 106],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [{"name": "LATENT", "type": "LATENT", "links": [6]}],
+      "properties": {"Node name for S&R": "EmptyLatentImage"},
+      "widgets_values": [512, 512, 1]
+    },
+    {
+      "id": 5,
+      "type": "KSampler",
+      "pos": [500, 50],
+      "size": [315, 262],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {"name": "model", "type": "MODEL", "link": 1},
+        {"name": "positive", "type": "CONDITIONING", "link": 4},
+        {"name": "negative", "type": "CONDITIONING", "link": 5},
+        {"name": "latent_image", "type": "LATENT", "link": 6}
+      ],
+      "outputs": [{"name": "LATENT", "type": "LATENT", "links": [7]}],
+      "properties": {"Node name for S&R": "KSampler"},
+      "widgets_values": [12345, "fixed", 25, 7, "euler", "normal", 1]
+    },
+    {
+      "id": 6,
+      "type": "VAEDecode",
+      "pos": [850, 50],
+      "size": [210, 46],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {"name": "samples", "type": "LATENT", "link": 7},
+        {"name": "vae", "type": "VAE", "link": 10}
+      ],
+      "outputs": [{"name": "IMAGE", "type": "IMAGE", "links": [8]}],
+      "properties": {"Node name for S&R": "VAEDecode"}
+    },
+    {
+      "id": 7,
+      "type": "SaveImage",
+      "pos": [1100, 50],
+      "size": [315, 270],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [{"name": "images", "type": "IMAGE", "link": 8}],
+      "properties": {},
+      "widgets_values": ["grass_tile"]
+    },
+    {
+      "id": 20,
+      "type": "LoadImage",
+      "pos": [50, 900],
+      "size": [315, 314],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "outputs": [
+        {"name": "IMAGE", "type": "IMAGE", "links": [25]},
+        {"name": "MASK", "type": "MASK", "links": null}
+      ],
+      "properties": {"Node name for S&R": "LoadImage"},
+      "widgets_values": ["tmp.png", "image"]
+    },
+    {
+      "id": 21,
+      "type": "ControlNetLoader",
+      "pos": [400, 900],
+      "size": [315, 58],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "outputs": [{"name": "CONTROL_NET", "type": "CONTROL_NET", "links": [26]}],
+      "properties": {"Node name for S&R": "ControlNetLoader"},
+      "widgets_values": ["control_v11f1e_sd15_tile.pth"]
+    },
+    {
+      "id": 22,
+      "type": "CLIPTextEncode",
+      "pos": [50, 1250],
+      "size": [400, 200],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [{"name": "clip", "type": "CLIP", "link": 21}],
+      "outputs": [{"name": "CONDITIONING", "type": "CONDITIONING", "links": [23]}],
+      "properties": {"Node name for S&R": "CLIPTextEncode"},
+      "widgets_values": ["stone brick floor texture, brown stone blocks, mortar, tactical rpg, FFT style, pixel art, PSX graphics, simple, flat colors, block pattern, low detail, seamless tile"],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 23,
+      "type": "CLIPTextEncode",
+      "pos": [50, 1500],
+      "size": [400, 200],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [{"name": "clip", "type": "CLIP", "link": 22}],
+      "outputs": [{"name": "CONDITIONING", "type": "CONDITIONING", "links": [24]}],
+      "properties": {"Node name for S&R": "CLIPTextEncode"},
+      "widgets_values": ["photorealistic, 3d render, detailed, complex, modern, smooth, gradient, realistic lighting"],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 24,
+      "type": "ControlNetApply",
+      "pos": [750, 900],
+      "size": [317, 98],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {"name": "conditioning", "type": "CONDITIONING", "link": 23},
+        {"name": "control_net", "type": "CONTROL_NET", "link": 26},
+        {"name": "image", "type": "IMAGE", "link": 25}
+      ],
+      "outputs": [{"name": "CONDITIONING", "type": "CONDITIONING", "links": [27]}],
+      "properties": {"Node name for S&R": "ControlNetApply"},
+      "widgets_values": [0.85]
+    },
+    {
+      "id": 25,
+      "type": "EmptyLatentImage",
+      "pos": [50, 1750],
+      "size": [315, 106],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "outputs": [{"name": "LATENT", "type": "LATENT", "links": [28]}],
+      "properties": {"Node name for S&R": "EmptyLatentImage"},
+      "widgets_values": [512, 512, 1]
+    },
+    {
+      "id": 26,
+      "type": "KSampler",
+      "pos": [1100, 900],
+      "size": [315, 262],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {"name": "model", "type": "MODEL", "link": 20},
+        {"name": "positive", "type": "CONDITIONING", "link": 27},
+        {"name": "negative", "type": "CONDITIONING", "link": 24},
+        {"name": "latent_image", "type": "LATENT", "link": 28}
+      ],
+      "outputs": [{"name": "LATENT", "type": "LATENT", "links": [29]}],
+      "properties": {"Node name for S&R": "KSampler"},
+      "widgets_values": [67890, "fixed", 25, 7, "euler", "normal", 1]
+    },
+    {
+      "id": 27,
+      "type": "VAEDecode",
+      "pos": [1450, 900],
+      "size": [210, 46],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {"name": "samples", "type": "LATENT", "link": 29},
+        {"name": "vae", "type": "VAE", "link": 30}
+      ],
+      "outputs": [{"name": "IMAGE", "type": "IMAGE", "links": [32]}],
+      "properties": {"Node name for S&R": "VAEDecode"}
+    },
+    {
+      "id": 28,
+      "type": "SaveImage",
+      "pos": [1700, 900],
+      "size": [315, 270],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [{"name": "images", "type": "IMAGE", "link": 32}],
+      "properties": {},
+      "widgets_values": ["stone_tile"]
+    },
+    {
+      "id": 30,
+      "type": "Note",
+      "pos": [50, -150],
+      "size": [400, 150],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "properties": {"text": ""},
+      "widgets_values": ["GRASS TILE GENERATOR\n\nGenerates simple FFT-style grass texture.\nAdjust seed in KSampler for variations.\nPrompt emphasizes flat colors, low detail, pixel art style."],
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 31,
+      "type": "Note",
+      "pos": [50, 750],
+      "size": [400, 100],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "properties": {"text": ""},
+      "widgets_values": ["STONE TILE GENERATOR\n\nUses ControlNet with tmp.png reference to maintain stone brick style.\nDenoise 0.85 gives creative freedom while keeping structure."],
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 32,
+      "type": "Note",
+      "pos": [1500, -150],
+      "size": [500, 200],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "properties": {"text": ""},
+      "widgets_values": ["WORKFLOW OVERVIEW:\n\n1. Generate GRASS tile (top section)\n2. Generate STONE tile (bottom section, uses ControlNet)\n3. Save both tiles\n4. Manually load them into image editor\n5. Create 2x2 grid: [grass][stone]\n                    [grass][stone]\n6. Use Part 2 of workflow (coming next) for auto-inpainting\n\nNOTE: This is Part 1 - Base Tile Generation.\nPart 2 will handle grid assembly and seam inpainting automatically."],
+      "color": "#432",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [1, 1, 0, 5, 0, "MODEL"],
+    [2, 1, 1, 2, 0, "CLIP"],
+    [3, 1, 1, 3, 0, "CLIP"],
+    [4, 2, 0, 5, 1, "CONDITIONING"],
+    [5, 3, 0, 5, 2, "CONDITIONING"],
+    [6, 4, 0, 5, 3, "LATENT"],
+    [7, 5, 0, 6, 0, "LATENT"],
+    [8, 6, 0, 7, 0, "IMAGE"],
+    [10, 1, 2, 6, 1, "VAE"],
+    [11, 1, 2, 27, 1, "VAE"],
+    [20, 1, 0, 26, 0, "MODEL"],
+    [21, 1, 1, 22, 0, "CLIP"],
+    [22, 1, 1, 23, 0, "CLIP"],
+    [23, 22, 0, 24, 0, "CONDITIONING"],
+    [24, 23, 0, 26, 2, "CONDITIONING"],
+    [25, 20, 0, 24, 2, "IMAGE"],
+    [26, 21, 0, 24, 1, "CONTROL_NET"],
+    [27, 24, 0, 26, 1, "CONDITIONING"],
+    [28, 25, 0, 26, 3, "LATENT"],
+    [29, 26, 0, 27, 0, "LATENT"],
+    [30, 1, 2, 27, 1, "VAE"],
+    [31, 1, 2, 6, 1, "VAE"],
+    [32, 27, 0, 28, 0, "IMAGE"]
+  ],
+  "groups": [
+    {
+      "title": "Grass Generation",
+      "bounding": [25, -175, 1425, 925],
+      "color": "#3f789e",
+      "font_size": 24
+    },
+    {
+      "title": "Stone Generation (ControlNet)",
+      "bounding": [25, 825, 2000, 1075],
+      "color": "#8A5A2A",
+      "font_size": 24
+    }
+  ],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

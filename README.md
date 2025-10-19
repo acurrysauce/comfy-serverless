@@ -32,6 +32,21 @@ comfy-serverless/
 
 ### Part 1: Deploy to RunPod Serverless
 
+#### Step 0: Docker Setup (First Time Only)
+
+If you haven't used Docker before, you need to add your user to the docker group:
+
+```bash
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+**Important:** After running `usermod`, you need to either:
+- Run `newgrp docker` in your current terminal, OR
+- Log out and log back in
+
+This allows you to run Docker commands without `sudo`.
+
 #### Step 1: Build Docker Image
 
 ```bash
@@ -72,9 +87,25 @@ docker login registry.runpod.io
    - **Container Image**: Your image URL (e.g., `yourusername/comfyui-serverless:latest`)
    - **Container Disk**: 10 GB minimum
    - **GPU Types**: Select GPUs you want to use (e.g., RTX 4090, A100)
-   - **Workers**: 0 min, 1-3 max (auto-scales)
+   - **Workers**: **IMPORTANT - See below!**
    - **Idle Timeout**: 30 seconds (to save costs)
 4. Click "Deploy"
+
+**CRITICAL: Worker Configuration**
+
+The worker settings determine how models are loaded:
+
+- **For Development/Testing:**
+  - Min Workers: **1** (keeps one worker active)
+  - Max Workers: 1-3
+  - **Why?** Models stay loaded in GPU memory between requests. First request is fast!
+
+- **For Production/Cost Savings:**
+  - Min Workers: **0** (scales to zero when idle)
+  - Max Workers: 1-3
+  - **Why?** Saves money when idle, but EVERY request will reload models from network storage (slower startup)
+
+**Note:** If you set Min Workers to 0, models are NOT kept in memory between requests. Each new request will need to load models from your network volume, adding 30-60 seconds to startup time.
 
 #### Step 4: Get Your Endpoint ID and API Key
 
@@ -94,7 +125,30 @@ cd comfy-serverless/local-setup
 
 This installs ComfyUI in `~/ComfyUI-local` (or your chosen directory).
 
-#### Step 2: Start Local ComfyUI
+#### Step 2: Create Dummy Model Files
+
+**IMPORTANT:** Your local ComfyUI needs placeholder files for the models that exist on your RunPod network storage. This allows you to select the correct models in the UI when designing workflows.
+
+```bash
+# Navigate to your local ComfyUI models directory
+cd ~/ComfyUI-local/models
+
+# Create dummy files matching your RunPod network storage models
+# Example: If you have "sdxl_base.safetensors" on RunPod, create:
+touch checkpoints/sdxl_base.safetensors
+touch checkpoints/sd_v1-5.safetensors
+
+# Do the same for LoRAs
+touch loras/my_lora.safetensors
+
+# And any other model types
+touch vae/sdxl_vae.safetensors
+touch controlnet/control_v11p_sd15_openpose.pth
+```
+
+**Why?** ComfyUI's UI shows dropdown menus of available models. These dummy files let you select the right model names locally, then when the workflow runs on RunPod, it uses the real models from network storage.
+
+#### Step 3: Start Local ComfyUI
 
 ```bash
 cd ~/ComfyUI-local
@@ -104,15 +158,83 @@ python main.py
 
 Then open http://localhost:8188 in your browser.
 
-### Part 3: Configure Network Storage (Optional but Recommended)
+### Part 3: Configure Network Storage (Recommended)
 
-For models, you have several options:
+Network storage keeps your models persistent and accessible across all workers. This is the recommended approach for production use.
 
-#### Option A: RunPod Network Volumes
+#### Option A: RunPod Network Volumes (Recommended)
 
-1. Create a Network Volume in RunPod console
-2. Upload your models to it
-3. Attach it to your endpoint at `/comfyui/models`
+**1. Create a Network Volume**
+
+Go to https://www.runpod.io/console/volumes and create a new network volume:
+- Name: `comfyui-models`
+- Size: 50GB+ (depending on your models)
+- Region: Same as your endpoint
+
+**2. Set Up the Correct Directory Structure**
+
+The network volume must follow ComfyUI's expected structure:
+
+```
+/runpod-volume/comfyui/models/
+├── checkpoints/          # Stable Diffusion checkpoints (.safetensors, .ckpt)
+│   ├── sdxl_base.safetensors
+│   └── sd_v1-5.safetensors
+├── loras/               # LoRA files
+│   └── my_lora.safetensors
+├── vae/                 # VAE models
+│   └── sdxl_vae.safetensors
+├── controlnet/          # ControlNet models
+│   └── control_v11p_sd15_openpose.pth
+├── upscale_models/      # Upscaler models
+├── embeddings/          # Textual inversions
+└── ...                  # Other model types as needed
+```
+
+**3. Upload Your Models**
+
+The easiest way to upload models is using a temporary CPU pod with web terminal:
+
+**Step-by-step:**
+
+1. Go to https://www.runpod.io/console/pods
+2. Click "Deploy" and select the **cheapest CPU option** (not GPU - you don't need it!)
+3. Under "Select Network Volume", attach your `comfyui-models` volume
+4. Click "Deploy On-Demand"
+5. Once running, click "Connect" → "Start Web Terminal" (no SSH setup needed!)
+6. In the terminal, navigate to the volume and create the directory structure:
+
+```bash
+cd /workspace
+mkdir -p comfyui/models/checkpoints
+mkdir -p comfyui/models/loras
+mkdir -p comfyui/models/vae
+mkdir -p comfyui/models/controlnet
+mkdir -p comfyui/models/upscale_models
+mkdir -p comfyui/models/embeddings
+```
+
+7. Download your models using `wget`:
+
+```bash
+cd /workspace/comfyui/models/checkpoints
+wget https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors
+```
+
+8. When finished, **STOP and DELETE the pod** to avoid charges!
+
+**Alternative methods:**
+- RunPod's web interface file upload (slow for large files)
+- Use `rsync` or `scp` to copy from your local machine
+
+**4. Attach to Your Serverless Endpoint**
+
+When configuring your endpoint:
+- Click "Select Network Volume"
+- Choose your `comfyui-models` volume
+- Set mount path to: `/runpod-volume`
+
+**IMPORTANT:** The handler expects models at `/runpod-volume/comfyui/models/`. Make sure your directory structure matches!
 
 #### Option B: Download at Runtime
 

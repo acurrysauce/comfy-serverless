@@ -19,7 +19,8 @@ fi
 FULL_IMAGE_NAME="${REGISTRY}:${TAG}"
 
 echo "Tagging image..."
-docker tag "${IMAGE_NAME}:${TAG}" "${FULL_IMAGE_NAME}"
+# Always tag from :latest (which build.sh creates)
+docker tag "${IMAGE_NAME}:latest" "${FULL_IMAGE_NAME}"
 
 echo "Pushing to registry: ${FULL_IMAGE_NAME}"
 docker push "${FULL_IMAGE_NAME}"

@@ -112,12 +112,17 @@ def wait_for_completion(prompt_id):
                     output_files = []
 
                     # Extract output files
+                    print(f"DEBUG: Processing outputs from {len(outputs)} nodes")
                     for node_id, node_output in outputs.items():
+                        print(f"DEBUG: Node {node_id} output: {node_output.keys()}")
                         if "images" in node_output:
+                            print(f"DEBUG: Node {node_id} has {len(node_output['images'])} images")
                             for image in node_output["images"]:
                                 filename = image["filename"]
                                 output_files.append(filename)
+                                print(f"DEBUG: Added image: {filename}")
 
+                    print(f"DEBUG: Total output files collected: {len(output_files)}")
                     return output_files
 
         except Exception as e:
@@ -173,6 +178,16 @@ def handler(event):
     try:
         input_data = event.get('input', {})
 
+        # Save reference images BEFORE starting ComfyUI so it can see them
+        if "reference_images" in input_data:
+            print("Saving reference images to input folder...")
+            reference_images = input_data["reference_images"]
+            for filename, image_base64 in reference_images.items():
+                filepath = os.path.join(COMFYUI_INPUT, filename)
+                with open(filepath, "wb") as f:
+                    f.write(base64.b64decode(image_base64))
+                print(f"  Saved: {filepath}")
+
         # Start ComfyUI server if not running
         if not start_comfyui_server():
             return {
@@ -184,16 +199,6 @@ def handler(event):
             print("Downloading models...")
             download_models(input_data["models"])
 
-        # Save reference images if specified
-        if "reference_images" in input_data:
-            print("Saving reference images to input folder...")
-            reference_images = input_data["reference_images"]
-            for filename, image_base64 in reference_images.items():
-                filepath = os.path.join(COMFYUI_INPUT, filename)
-                with open(filepath, "wb") as f:
-                    f.write(base64.b64decode(image_base64))
-                print(f"  Saved: {filepath}")
-
         # Get workflow
         workflow = input_data.get("workflow")
         if not workflow:
@@ -202,6 +207,58 @@ def handler(event):
             }
 
         print("Queueing workflow...")
+        print(f"DEBUG: Workflow has {len(workflow)} nodes")
+
+        # Debug: List model directories
+        print("\nDEBUG: Listing model directories:")
+        checkpoints_dir = "/runpod-volume/comfyui/models/checkpoints"
+        controlnet_dir = "/runpod-volume/comfyui/models/controlnet"
+
+        if os.path.exists(checkpoints_dir):
+            checkpoints = os.listdir(checkpoints_dir)
+            print(f"  Checkpoints dir: {checkpoints}")
+        else:
+            print(f"  Checkpoints dir DOES NOT EXIST: {checkpoints_dir}")
+
+        if os.path.exists(controlnet_dir):
+            controlnets = os.listdir(controlnet_dir)
+            print(f"  ControlNet dir: {controlnets}")
+        else:
+            print(f"  ControlNet dir DOES NOT EXIST: {controlnet_dir}")
+
+        if os.path.exists(COMFYUI_INPUT):
+            input_files = os.listdir(COMFYUI_INPUT)
+            print(f"  Input dir: {input_files}")
+        else:
+            print(f"  Input dir DOES NOT EXIST: {COMFYUI_INPUT}")
+
+        # Debug: Check for missing files
+        print("\nDEBUG: Checking workflow requirements:")
+        for node_id, node_data in workflow.items():
+            if node_data.get("class_type") == "CheckpointLoaderSimple":
+                ckpt = node_data["inputs"]["ckpt_name"]
+                ckpt_path = f"/runpod-volume/comfyui/models/checkpoints/{ckpt}"
+                if os.path.exists(ckpt_path):
+                    print(f"  ✓ Found checkpoint: {ckpt}")
+                else:
+                    print(f"  ✗ MISSING checkpoint: {ckpt} at {ckpt_path}")
+
+            elif node_data.get("class_type") == "ControlNetLoader":
+                cn = node_data["inputs"]["control_net_name"]
+                cn_path = f"/runpod-volume/comfyui/models/controlnet/{cn}"
+                if os.path.exists(cn_path):
+                    print(f"  ✓ Found ControlNet: {cn}")
+                else:
+                    print(f"  ✗ MISSING ControlNet: {cn} at {cn_path}")
+
+            elif node_data.get("class_type") == "LoadImage":
+                img = node_data["inputs"]["image"]
+                img_path = f"{COMFYUI_INPUT}/{img}"
+                if os.path.exists(img_path):
+                    print(f"  ✓ Found image: {img}")
+                else:
+                    print(f"  ✗ MISSING image: {img} at {img_path}")
+
         result = queue_prompt(workflow)
         prompt_id = result.get("prompt_id")
 

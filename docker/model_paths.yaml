@@ -1,0 +1,9 @@
+comfyui:
+  base_path: /runpod-volume/comfyui/models/
+  checkpoints: checkpoints
+  vae: vae
+  loras: loras
+  upscale_models: upscale_models
+  embeddings: embeddings
+  controlnet: controlnet
+  clip_vision: clip_vision

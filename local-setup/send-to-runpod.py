@@ -10,12 +10,21 @@ import sys
 import os
 import time
 import base64
+import subprocess
 from pathlib import Path
 
 
 # Configuration - UPDATE THESE
 RUNPOD_API_KEY = os.environ.get("RUNPOD_API_KEY", "")
 RUNPOD_ENDPOINT_ID = os.environ.get("RUNPOD_ENDPOINT_ID", "")
+
+
+def open_image(filepath):
+    """Open an image file with xdg-open"""
+    try:
+        subprocess.Popen(["xdg-open", filepath], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except Exception as e:
+        print(f"Warning: Could not open image: {e}")
 
 
 def send_workflow(workflow_file, models=None, output_dir="./outputs"):
@@ -117,6 +126,7 @@ def send_workflow(workflow_file, models=None, output_dir="./outputs"):
 
             # Save images
             os.makedirs(output_dir, exist_ok=True)
+            saved_images = []
 
             for i, image_data in enumerate(images):
                 filename = image_data.get("filename", f"output_{i}.png")
@@ -128,6 +138,12 @@ def send_workflow(workflow_file, models=None, output_dir="./outputs"):
                     f.write(base64.b64decode(image_base64))
 
                 print(f"Saved: {output_path}")
+                saved_images.append(output_path)
+
+            # Open all images
+            print("\nOpening images...")
+            for image_path in saved_images:
+                open_image(image_path)
 
             print("\nDone!")
             break

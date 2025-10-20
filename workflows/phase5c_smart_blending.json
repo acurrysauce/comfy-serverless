@@ -356,7 +356,7 @@
       "location_y": 1024,
       "shape": "square",
       "shape_width": 2048,
-      "shape_height": 384,
+      "shape_height": 512,
       "grow": 0
     }
   },

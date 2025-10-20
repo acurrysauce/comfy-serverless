@@ -356,7 +356,7 @@
       "location_y": 1024,
       "shape": "square",
       "shape_width": 2048,
-      "shape_height": 512,
+      "shape_height": 640,
       "grow": 0
     }
   },
@@ -407,7 +407,7 @@
         "3",
         1
       ],
-      "text": "top-down view, flat ground texture viewed from above, green grass patches gradually mixing with stone, small pebbles scattered between grass, moss spots on stones, painterly abstract style, game texture map, seamless terrain transition, no depth, flat 2d surface"
+      "text": "top-down view, irregular wavy boundary, natural uneven edge, grass patches scattered into stone area, stone patches scattered into grass area, organic random transition, painterly abstract style, game texture map, no straight lines, varied terrain edge, flat 2d surface viewed from above"
     }
   },
   "205": {
@@ -417,7 +417,7 @@
         "3",
         1
       ],
-      "text": "blurry, low quality, side view, 3d perspective, depth, cliff, vertical wall, looking from side, photorealistic, harsh seam, visible line, sharp border"
+      "text": "blurry, low quality, side view, 3d perspective, depth, cliff, vertical wall, looking from side, photorealistic, harsh seam, straight line, perfectly horizontal edge, geometric border, ruler-straight boundary"
     }
   },
   "300": {
@@ -605,7 +605,7 @@
       "cfg": 7,
       "sampler_name": "euler",
       "scheduler": "normal",
-      "denoise": 0.65
+      "denoise": 0.7
     }
   },
   "311": {

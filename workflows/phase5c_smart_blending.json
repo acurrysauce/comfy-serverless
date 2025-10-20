@@ -347,17 +347,19 @@
     }
   },
   "102": {
-    "class_type": "CreateShapeMask",
+    "class_type": "LoadImage",
     "inputs": {
-      "frames": 1,
-      "frame_width": 2048,
-      "frame_height": 2048,
-      "location_x": 1024,
-      "location_y": 1024,
-      "shape": "square",
-      "shape_width": 2048,
-      "shape_height": 640,
-      "grow": 0
+      "image": "irregular_horizontal_mask.png"
+    }
+  },
+  "103": {
+    "class_type": "ImageToMask",
+    "inputs": {
+      "image": [
+        "102",
+        0
+      ],
+      "channel": "red"
     }
   },
   "200": {
@@ -407,7 +409,7 @@
         "3",
         1
       ],
-      "text": "top-down view, irregular wavy boundary, natural uneven edge, grass patches scattered into stone area, stone patches scattered into grass area, organic random transition, painterly abstract style, game texture map, no straight lines, varied terrain edge, flat 2d surface viewed from above"
+      "text": "top-down view, green grass mixed with brown stones, pebbles scattered in grass, grass growing between rocks, moss on stones, dirt and stones intermixed, painterly style, abstract game texture, flat 2d surface, no depth, seamless blended materials"
     }
   },
   "205": {
@@ -575,7 +577,7 @@
         0
       ],
       "mask": [
-        "102",
+        "103",
         0
       ]
     }
@@ -601,11 +603,11 @@
       ],
       "seed": 101,
       "control_after_generate": "fixed",
-      "steps": 20,
-      "cfg": 7,
+      "steps": 25,
+      "cfg": 7.5,
       "sampler_name": "euler",
       "scheduler": "normal",
-      "denoise": 0.7
+      "denoise": 0.75
     }
   },
   "311": {

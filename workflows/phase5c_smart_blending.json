@@ -407,7 +407,7 @@
         "3",
         1
       ],
-      "text": "grass growing between stone cracks, moss covering stone edges, small pebbles scattered in grass, dirt mixing with grass roots, weathered stone border, organic terrain transition, green patches on rocks, vegetation creeping onto stone path, natural worn boundary"
+      "text": "top-down view, flat ground texture viewed from above, green grass patches gradually mixing with stone, small pebbles scattered between grass, moss spots on stones, painterly abstract style, game texture map, seamless terrain transition, no depth, flat 2d surface"
     }
   },
   "205": {
@@ -417,7 +417,7 @@
         "3",
         1
       ],
-      "text": "blurry, low quality, harsh seam, visible line, abrupt edge, sharp border, discontinuity, cut, split"
+      "text": "blurry, low quality, side view, 3d perspective, depth, cliff, vertical wall, looking from side, photorealistic, harsh seam, visible line, sharp border"
     }
   },
   "300": {
@@ -605,7 +605,7 @@
       "cfg": 7,
       "sampler_name": "euler",
       "scheduler": "normal",
-      "denoise": 0.75
+      "denoise": 0.65
     }
   },
   "311": {

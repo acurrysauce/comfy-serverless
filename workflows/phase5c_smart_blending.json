@@ -315,24 +315,38 @@
         "20",
         0
       ],
-      "filename_prefix": "phase5b_mixed_before_inpaint"
+      "filename_prefix": "phase5c_before_inpaint"
     }
   },
-  "22": {
+  "100": {
     "class_type": "CreateShapeMask",
     "inputs": {
       "frames": 1,
       "frame_width": 2048,
       "frame_height": 2048,
       "location_x": 1024,
-      "location_y": 1024,
+      "location_y": 512,
       "shape": "square",
-      "shape_width": 384,
-      "shape_height": 2048,
+      "shape_width": 256,
+      "shape_height": 1024,
       "grow": 0
     }
   },
-  "23": {
+  "101": {
+    "class_type": "CreateShapeMask",
+    "inputs": {
+      "frames": 1,
+      "frame_width": 2048,
+      "frame_height": 2048,
+      "location_x": 1024,
+      "location_y": 1536,
+      "shape": "square",
+      "shape_width": 256,
+      "shape_height": 1024,
+      "grow": 0
+    }
+  },
+  "102": {
     "class_type": "CreateShapeMask",
     "inputs": {
       "frames": 1,
@@ -346,7 +360,67 @@
       "grow": 0
     }
   },
-  "24": {
+  "200": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "3",
+        1
+      ],
+      "text": "seamless grass texture, blended grass, smooth continuous texture, no visible seam, unified grass pattern"
+    }
+  },
+  "201": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "3",
+        1
+      ],
+      "text": "blurry, low quality, seam, line, edge, border, discontinuity, abrupt change"
+    }
+  },
+  "202": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "3",
+        1
+      ],
+      "text": "seamless stone texture, blended stones, smooth continuous cobblestone, no visible seam, unified stone pattern"
+    }
+  },
+  "203": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "3",
+        1
+      ],
+      "text": "blurry, low quality, seam, line, edge, border, discontinuity, abrupt change"
+    }
+  },
+  "204": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "3",
+        1
+      ],
+      "text": "grass growing between stone cracks, moss covering stone edges, small pebbles scattered in grass, dirt mixing with grass roots, weathered stone border, organic terrain transition, green patches on rocks, vegetation creeping onto stone path, natural worn boundary"
+    }
+  },
+  "205": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "3",
+        1
+      ],
+      "text": "blurry, low quality, harsh seam, visible line, abrupt edge, sharp border, discontinuity, cut, split"
+    }
+  },
+  "300": {
     "class_type": "VAEEncode",
     "inputs": {
       "pixels": [
@@ -359,40 +433,20 @@
       ]
     }
   },
-  "25": {
-    "class_type": "CLIPTextEncode",
-    "inputs": {
-      "clip": [
-        "3",
-        1
-      ],
-      "text": "grass growing between stone cracks, moss covering stone edges, small pebbles scattered in grass, dirt mixing with grass roots, weathered stone border, organic terrain transition, green patches on rocks, vegetation creeping onto stone path, natural worn boundary"
-    }
-  },
-  "26": {
-    "class_type": "CLIPTextEncode",
-    "inputs": {
-      "clip": [
-        "3",
-        1
-      ],
-      "text": "blurry, low quality, harsh seam, visible line, abrupt edge, sharp border, discontinuity, cut, split"
-    }
-  },
-  "27": {
+  "301": {
     "class_type": "SetLatentNoiseMask",
     "inputs": {
       "samples": [
-        "24",
+        "300",
         0
       ],
       "mask": [
-        "22",
+        "100",
         0
       ]
     }
   },
-  "28": {
+  "302": {
     "class_type": "KSampler",
     "inputs": {
       "model": [
@@ -400,15 +454,15 @@
         0
       ],
       "positive": [
-        "25",
+        "200",
         0
       ],
       "negative": [
-        "26",
+        "201",
         0
       ],
       "latent_image": [
-        "27",
+        "301",
         0
       ],
       "seed": 99,
@@ -417,14 +471,14 @@
       "cfg": 7,
       "sampler_name": "euler",
       "scheduler": "normal",
-      "denoise": 0.75
+      "denoise": 0.6
     }
   },
-  "29": {
+  "303": {
     "class_type": "VAEDecode",
     "inputs": {
       "samples": [
-        "28",
+        "302",
         0
       ],
       "vae": [
@@ -433,11 +487,11 @@
       ]
     }
   },
-  "30": {
+  "304": {
     "class_type": "VAEEncode",
     "inputs": {
       "pixels": [
-        "29",
+        "303",
         0
       ],
       "vae": [
@@ -446,20 +500,20 @@
       ]
     }
   },
-  "31": {
+  "305": {
     "class_type": "SetLatentNoiseMask",
     "inputs": {
       "samples": [
-        "30",
+        "304",
         0
       ],
       "mask": [
-        "23",
+        "101",
         0
       ]
     }
   },
-  "32": {
+  "306": {
     "class_type": "KSampler",
     "inputs": {
       "model": [
@@ -467,15 +521,15 @@
         0
       ],
       "positive": [
-        "25",
+        "202",
         0
       ],
       "negative": [
-        "26",
+        "203",
         0
       ],
       "latent_image": [
-        "31",
+        "305",
         0
       ],
       "seed": 100,
@@ -484,14 +538,14 @@
       "cfg": 7,
       "sampler_name": "euler",
       "scheduler": "normal",
-      "denoise": 0.75
+      "denoise": 0.6
     }
   },
-  "33": {
+  "307": {
     "class_type": "VAEDecode",
     "inputs": {
       "samples": [
-        "32",
+        "306",
         0
       ],
       "vae": [
@@ -500,14 +554,81 @@
       ]
     }
   },
-  "34": {
+  "308": {
+    "class_type": "VAEEncode",
+    "inputs": {
+      "pixels": [
+        "307",
+        0
+      ],
+      "vae": [
+        "2",
+        0
+      ]
+    }
+  },
+  "309": {
+    "class_type": "SetLatentNoiseMask",
+    "inputs": {
+      "samples": [
+        "308",
+        0
+      ],
+      "mask": [
+        "102",
+        0
+      ]
+    }
+  },
+  "310": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": [
+        "3",
+        0
+      ],
+      "positive": [
+        "204",
+        0
+      ],
+      "negative": [
+        "205",
+        0
+      ],
+      "latent_image": [
+        "309",
+        0
+      ],
+      "seed": 101,
+      "control_after_generate": "fixed",
+      "steps": 20,
+      "cfg": 7,
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "denoise": 0.75
+    }
+  },
+  "311": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "310",
+        0
+      ],
+      "vae": [
+        "2",
+        0
+      ]
+    }
+  },
+  "312": {
     "class_type": "SaveImage",
     "inputs": {
       "images": [
-        "33",
+        "311",
         0
       ],
-      "filename_prefix": "phase5b_mixed_after_inpaint"
+      "filename_prefix": "phase5c_after_smart_inpaint"
     }
   }
 }

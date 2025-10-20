@@ -4,17 +4,8 @@
 set -e
 
 IMAGE_NAME="comfyui-serverless"
+REGISTRY="${1:-curryberto/comfyui-serverless}"
 TAG="${2:-latest}"
-REGISTRY="${1}"
-
-if [ -z "$REGISTRY" ]; then
-    echo "Usage: $0 <registry> [tag]"
-    echo ""
-    echo "Examples:"
-    echo "  $0 username/comfyui-serverless latest"
-    echo "  $0 registry.runpod.io/username/comfyui-serverless v1.0"
-    exit 1
-fi
 
 FULL_IMAGE_NAME="${REGISTRY}:${TAG}"
 

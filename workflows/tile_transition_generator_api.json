@@ -12,7 +12,7 @@
         "1",
         1
       ],
-      "text": "grass texture, tactical rpg, final fantasy tactics style, pixel art, simple green grass, low detail, flat colors, PSX graphics, 16bit, non-busy, clean, top-down view, seamless tile"
+      "text": "solid green field texture, abstract grass pattern, flat matte color, no detail, minimalist, simple shapes, retro game texture, PSX graphics, limited palette, clean, top-down tactical RPG, plain grass tile, geometric, low resolution aesthetic"
     }
   },
   "3": {
@@ -22,7 +22,7 @@
         "1",
         1
       ],
-      "text": "photorealistic, 3d, detailed, complex, busy, gradient, smooth, blurry, modern, high resolution, realistic lighting"
+      "text": "photorealistic, detailed, high detail, fine detail, texture detail, realistic, 3d render, shading, gradient, smooth, complex pattern, busy, ornate, depth, shadows, highlights, modern graphics, intricate"
     }
   },
   "4": {
@@ -87,7 +87,7 @@
   "20": {
     "class_type": "LoadImage",
     "inputs": {
-      "image": "tmp.png"
+      "image": "stone_floor_512x512.png"
     }
   },
   "21": {
@@ -103,7 +103,7 @@
         "1",
         1
       ],
-      "text": "stone brick floor texture, brown stone blocks, mortar, tactical rpg, FFT style, pixel art, PSX graphics, simple, flat colors, block pattern, low detail, seamless tile"
+      "text": "abstract stone floor pattern, large simple shapes, flat matte colors, no detail, minimalist, geometric blocks, tactical RPG game texture, retro PSX style, limited palette, no shading, no texture detail, clean edges, low resolution aesthetic"
     }
   },
   "23": {
@@ -113,7 +113,7 @@
         "1",
         1
       ],
-      "text": "photorealistic, 3d render, detailed, complex, modern, smooth, gradient, realistic lighting"
+      "text": "photorealistic, detailed, high detail, fine detail, texture detail, realistic, 3d render, shading, gradient, smooth, complex pattern, busy, ornate, depth, shadows, highlights, modern graphics, intricate, bricks, mortar lines"
     }
   },
   "24": {
@@ -131,7 +131,7 @@
         "20",
         0
       ],
-      "strength": 0.85
+      "strength": 0.75
     }
   },
   "25": {

@@ -1,0 +1,236 @@
+{
+  "1": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "v1-5-pruned-emaonly.safetensors"
+    }
+  },
+  "19": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "vae-ft-mse-840000-ema-pruned.safetensors"
+    }
+  },
+  "2": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "stone_floor_512x512.png"
+    }
+  },
+  "3": {
+    "class_type": "ControlNetLoader",
+    "inputs": {
+      "control_net_name": "control_v11f1e_sd15_tile.pth"
+    }
+  },
+  "4": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "1",
+        1
+      ],
+      "text": "close-up stone brick floor texture, macro view, detailed brown stone blocks, individual bricks visible, mortar between bricks, realistic texture, photorealistic, detailed surface, natural stone material, high quality, sharp, zoomed in view, single brick detail"
+    }
+  },
+  "5": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "1",
+        1
+      ],
+      "text": "blurry, low quality, pixelated, low resolution, abstract, simple, flat, cartoon, anime, aerial view, zoomed out, bird's eye view, distant, far away, overview, tiny, miniature"
+    }
+  },
+  "6": {
+    "class_type": "ControlNetApply",
+    "inputs": {
+      "conditioning": [
+        "4",
+        0
+      ],
+      "control_net": [
+        "3",
+        0
+      ],
+      "image": [
+        "2",
+        0
+      ],
+      "strength": 0.85
+    }
+  },
+  "7": {
+    "class_type": "VAEEncode",
+    "inputs": {
+      "pixels": [
+        "2",
+        0
+      ],
+      "vae": [
+        "19",
+        0
+      ]
+    }
+  },
+  "8": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "positive": [
+        "6",
+        0
+      ],
+      "negative": [
+        "5",
+        0
+      ],
+      "latent_image": [
+        "7",
+        0
+      ],
+      "seed": 42,
+      "control_after_generate": "fixed",
+      "steps": 30,
+      "cfg": 8,
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "denoise": 0.4
+    }
+  },
+  "9": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "8",
+        0
+      ],
+      "vae": [
+        "19",
+        0
+      ]
+    }
+  },
+  "10": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "9",
+        0
+      ],
+      "filename_prefix": "stone_realistic_hires"
+    }
+  },
+  "11": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "grass_512x512.png"
+    }
+  },
+  "12": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "1",
+        1
+      ],
+      "text": "extreme close-up green grass texture, macro photography, vibrant green grass blades filling frame, lush green vegetation, single grass strand detail, ground level view, intimate grass detail, photorealistic green grass fibers, detailed grass structure, high magnification, zoomed to blade level, fresh green lawn, healthy grass, emerald green, grass covering entire surface"
+    }
+  },
+  "13": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "1",
+        1
+      ],
+      "text": "blurry, low quality, pixelated, low resolution, abstract, simple, flat, cartoon, anime, flowers, rocks, aerial view, zoomed out, bird's eye view, distant, far away, overview, tiny, miniature, field from above, wide shot, landscape view, full field, grass field, lawn view, yard, patches, clumps, separated grass, brown grass, dead grass, dry grass, yellow grass, gray, monochrome"
+    }
+  },
+  "14": {
+    "class_type": "ControlNetApply",
+    "inputs": {
+      "conditioning": [
+        "12",
+        0
+      ],
+      "control_net": [
+        "3",
+        0
+      ],
+      "image": [
+        "11",
+        0
+      ],
+      "strength": 0.4
+    }
+  },
+  "15": {
+    "class_type": "VAEEncode",
+    "inputs": {
+      "pixels": [
+        "11",
+        0
+      ],
+      "vae": [
+        "19",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "positive": [
+        "14",
+        0
+      ],
+      "negative": [
+        "13",
+        0
+      ],
+      "latent_image": [
+        "15",
+        0
+      ],
+      "seed": 84,
+      "control_after_generate": "fixed",
+      "steps": 30,
+      "cfg": 9,
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "denoise": 0.2
+    }
+  },
+  "17": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "16",
+        0
+      ],
+      "vae": [
+        "19",
+        0
+      ]
+    }
+  },
+  "18": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "17",
+        0
+      ],
+      "filename_prefix": "grass_realistic_hires"
+    }
+  }
+}

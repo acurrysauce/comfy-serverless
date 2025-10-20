@@ -112,3 +112,4 @@ node_modules/
 
 # RunPod specific
 test_input.json
+docker/ComfyUI/

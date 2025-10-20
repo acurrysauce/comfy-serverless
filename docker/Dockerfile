@@ -28,17 +28,22 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
     /root/.local/bin/uv --version
 ENV PATH="/root/.local/bin:${PATH}"
 
+# Copy ComfyUI (including custom nodes) into the image
+COPY ComfyUI /comfyui
+
 # Set working directory
 WORKDIR /comfyui
-
-# Clone ComfyUI
-RUN git clone https://github.com/comfyanonymous/ComfyUI.git /comfyui
 
 # Create virtual environment with uv
 RUN /root/.local/bin/uv venv /comfyui/.venv
 
 # Install ComfyUI requirements with uv (much faster!)
 RUN /root/.local/bin/uv pip install --python /comfyui/.venv/bin/python -r requirements.txt
+
+# Install custom node requirements
+RUN if [ -f /comfyui/custom_nodes/ComfyUI-KJNodes/requirements.txt ]; then \
+        /root/.local/bin/uv pip install --python /comfyui/.venv/bin/python -r /comfyui/custom_nodes/ComfyUI-KJNodes/requirements.txt; \
+    fi
 
 # Install additional packages for serverless
 RUN /root/.local/bin/uv pip install --python /comfyui/.venv/bin/python \

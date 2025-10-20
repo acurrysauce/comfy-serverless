@@ -14,7 +14,6 @@ import time
 import subprocess
 import requests
 import base64
-import shutil
 from pathlib import Path
 from utils import download_models, upload_to_s3, cleanup_outputs
 
@@ -27,61 +26,8 @@ COMFYUI_PYTHON = "/comfyui/.venv/bin/python"
 # Models path - RunPod mounts network volumes at /runpod-volume
 MODELS_PATH = "/runpod-volume/comfyui/models"
 
-# Custom nodes paths
-NETWORK_CUSTOM_NODES = "/runpod-volume/comfyui/custom_nodes"
-COMFYUI_CUSTOM_NODES = f"{COMFYUI_PATH}/custom_nodes"
-
 # ComfyUI server process
 comfyui_process = None
-custom_nodes_synced = False
-
-
-def sync_custom_nodes():
-    """Copy custom nodes from network volume to local container at startup"""
-    global custom_nodes_synced
-
-    if custom_nodes_synced:
-        print("Custom nodes already synced, skipping...")
-        return
-
-    print("Syncing custom nodes from network volume...")
-
-    # Create network custom_nodes directory if it doesn't exist
-    if not os.path.exists(NETWORK_CUSTOM_NODES):
-        os.makedirs(NETWORK_CUSTOM_NODES, exist_ok=True)
-        print(f"  Created network custom_nodes directory: {NETWORK_CUSTOM_NODES}")
-        custom_nodes_synced = True
-        return
-
-    # Ensure local custom_nodes directory exists
-    os.makedirs(COMFYUI_CUSTOM_NODES, exist_ok=True)
-
-    # Copy each custom node folder from network to local
-    synced_count = 0
-    for node_dir in os.listdir(NETWORK_CUSTOM_NODES):
-        src = os.path.join(NETWORK_CUSTOM_NODES, node_dir)
-        dst = os.path.join(COMFYUI_CUSTOM_NODES, node_dir)
-
-        # Only sync directories (skip files)
-        if os.path.isdir(src):
-            try:
-                # Remove old version if exists
-                if os.path.exists(dst):
-                    shutil.rmtree(dst)
-
-                # Copy to local
-                shutil.copytree(src, dst)
-                print(f"  ✓ Synced: {node_dir}")
-                synced_count += 1
-            except Exception as e:
-                print(f"  ✗ Failed to sync {node_dir}: {e}")
-
-    if synced_count > 0:
-        print(f"Successfully synced {synced_count} custom node(s)")
-    else:
-        print("No custom nodes found on network volume")
-
-    custom_nodes_synced = True
 
 
 def start_comfyui_server():
@@ -89,9 +35,6 @@ def start_comfyui_server():
     global comfyui_process
 
     if comfyui_process is None:
-        # Sync custom nodes from network volume BEFORE starting ComfyUI
-        sync_custom_nodes()
-
         print("Starting ComfyUI server...")
         print(f"Models path: {MODELS_PATH}")
 

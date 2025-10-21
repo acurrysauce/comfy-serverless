@@ -47,11 +47,31 @@
       "text": "blurry, low quality, photorealistic, 3d render, realistic grass blades, detailed, grass strands, individual blades, plants, flowers, high detail, intricate, brown, dirt, mud, earth, soil"
     }
   },
+  "50": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "3",
+        1
+      ],
+      "text": "hand painted stone floor texture, medieval cobblestone ground, rough stone blocks, weathered rock surface, rustic stone pavement, fantasy game texture, top-down flat view, earthy tones, gray and brown stones, worn stone path, artisan stonework, seamless"
+    }
+  },
+  "51": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "3",
+        1
+      ],
+      "text": "blurry, low quality, photorealistic, modern brick wall, grout lines, uniform tiles, polished surface, shiny, pristine, grass, plants, dirt, mud, green"
+    }
+  },
   "6": {
     "class_type": "EmptyLatentImage",
     "inputs": {
-      "width": 1024,
-      "height": 1024,
+      "width": 768,
+      "height": 768,
       "batch_size": 1
     }
   },
@@ -84,7 +104,7 @@
     }
   },
   "8": {
-    "class_type": "VAEDecode",
+    "class_type": "VAEDecodeTiled",
     "inputs": {
       "samples": [
         "7",
@@ -93,14 +113,15 @@
       "vae": [
         "2",
         0
-      ]
+      ],
+      "tile_size": 512
     }
   },
   "9": {
     "class_type": "EmptyLatentImage",
     "inputs": {
-      "width": 1024,
-      "height": 1024,
+      "width": 768,
+      "height": 768,
       "batch_size": 1
     }
   },
@@ -133,7 +154,7 @@
     }
   },
   "11": {
-    "class_type": "VAEDecode",
+    "class_type": "VAEDecodeTiled",
     "inputs": {
       "samples": [
         "10",
@@ -142,34 +163,15 @@
       "vae": [
         "2",
         0
-      ]
-    }
-  },
-  "50": {
-    "class_type": "CLIPTextEncode",
-    "inputs": {
-      "clip": [
-        "3",
-        1
       ],
-      "text": "hand painted stone floor texture, medieval cobblestone ground, rough stone blocks, weathered rock surface, rustic stone pavement, fantasy game texture, top-down flat view, earthy tones, gray and brown stones, worn stone path, artisan stonework, seamless"
-    }
-  },
-  "51": {
-    "class_type": "CLIPTextEncode",
-    "inputs": {
-      "clip": [
-        "3",
-        1
-      ],
-      "text": "blurry, low quality, photorealistic, modern brick wall, grout lines, uniform tiles, polished surface, shiny, pristine, grass, plants, dirt, mud, green"
+      "tile_size": 512
     }
   },
   "52": {
     "class_type": "EmptyLatentImage",
     "inputs": {
-      "width": 1024,
-      "height": 1024,
+      "width": 768,
+      "height": 768,
       "batch_size": 1
     }
   },
@@ -202,7 +204,7 @@
     }
   },
   "54": {
-    "class_type": "VAEDecode",
+    "class_type": "VAEDecodeTiled",
     "inputs": {
       "samples": [
         "53",
@@ -211,14 +213,15 @@
       "vae": [
         "2",
         0
-      ]
+      ],
+      "tile_size": 512
     }
   },
   "55": {
     "class_type": "EmptyLatentImage",
     "inputs": {
-      "width": 1024,
-      "height": 1024,
+      "width": 768,
+      "height": 768,
       "batch_size": 1
     }
   },
@@ -251,7 +254,7 @@
     }
   },
   "57": {
-    "class_type": "VAEDecode",
+    "class_type": "VAEDecodeTiled",
     "inputs": {
       "samples": [
         "56",
@@ -260,7 +263,8 @@
       "vae": [
         "2",
         0
-      ]
+      ],
+      "tile_size": 512
     }
   },
   "18": {
@@ -315,54 +319,54 @@
         "20",
         0
       ],
-      "filename_prefix": "phase5c_before_inpaint"
+      "filename_prefix": "before_inpaint_grid"
     }
   },
-  "100": {
+  "60": {
     "class_type": "CreateShapeMask",
     "inputs": {
       "frames": 1,
-      "frame_width": 2048,
-      "frame_height": 2048,
-      "location_x": 1024,
-      "location_y": 512,
+      "frame_width": 1536,
+      "frame_height": 1536,
+      "location_x": 768,
+      "location_y": 384,
       "shape": "square",
-      "shape_width": 256,
-      "shape_height": 1024,
+      "shape_width": 192,
+      "shape_height": 768,
       "grow": 0
     }
   },
-  "101": {
+  "61": {
     "class_type": "CreateShapeMask",
     "inputs": {
       "frames": 1,
-      "frame_width": 2048,
-      "frame_height": 2048,
-      "location_x": 1024,
-      "location_y": 1536,
+      "frame_width": 1536,
+      "frame_height": 1536,
+      "location_x": 768,
+      "location_y": 1152,
       "shape": "square",
-      "shape_width": 256,
-      "shape_height": 1024,
+      "shape_width": 192,
+      "shape_height": 768,
       "grow": 0
     }
   },
-  "102": {
+  "62": {
     "class_type": "LoadImage",
     "inputs": {
-      "image": "grass_to_stone_transition.png"
+      "image": "irregular_horizontal_mask.png"
     }
   },
-  "103": {
+  "63": {
     "class_type": "ImageToMask",
     "inputs": {
       "image": [
-        "102",
+        "62",
         0
       ],
       "channel": "red"
     }
   },
-  "200": {
+  "70": {
     "class_type": "CLIPTextEncode",
     "inputs": {
       "clip": [
@@ -372,7 +376,7 @@
       "text": "seamless grass texture, blended grass, smooth continuous texture, no visible seam, unified grass pattern"
     }
   },
-  "201": {
+  "71": {
     "class_type": "CLIPTextEncode",
     "inputs": {
       "clip": [
@@ -382,7 +386,7 @@
       "text": "blurry, low quality, seam, line, edge, border, discontinuity, abrupt change"
     }
   },
-  "202": {
+  "72": {
     "class_type": "CLIPTextEncode",
     "inputs": {
       "clip": [
@@ -392,7 +396,7 @@
       "text": "seamless stone texture, blended stones, smooth continuous cobblestone, no visible seam, unified stone pattern"
     }
   },
-  "203": {
+  "73": {
     "class_type": "CLIPTextEncode",
     "inputs": {
       "clip": [
@@ -402,7 +406,7 @@
       "text": "blurry, low quality, seam, line, edge, border, discontinuity, abrupt change"
     }
   },
-  "204": {
+  "74": {
     "class_type": "CLIPTextEncode",
     "inputs": {
       "clip": [
@@ -412,7 +416,7 @@
       "text": "heavily mixed terrain, green grass and brown stones intermixed, large stone patches in grass area, large grass patches in stone area, pebbles everywhere, moss covered rocks, organic chaotic blending, painterly game texture, top-down flat view, heavily blended transition zone"
     }
   },
-  "205": {
+  "75": {
     "class_type": "CLIPTextEncode",
     "inputs": {
       "clip": [
@@ -422,7 +426,7 @@
       "text": "blurry, low quality, side view, 3d perspective, depth, cliff, vertical wall, looking from side, photorealistic, harsh seam, straight line, perfectly horizontal edge, geometric border, ruler-straight boundary"
     }
   },
-  "300": {
+  "80": {
     "class_type": "VAEEncode",
     "inputs": {
       "pixels": [
@@ -435,20 +439,20 @@
       ]
     }
   },
-  "301": {
+  "81": {
     "class_type": "SetLatentNoiseMask",
     "inputs": {
       "samples": [
-        "300",
+        "80",
         0
       ],
       "mask": [
-        "100",
+        "60",
         0
       ]
     }
   },
-  "302": {
+  "82": {
     "class_type": "KSampler",
     "inputs": {
       "model": [
@@ -456,15 +460,15 @@
         0
       ],
       "positive": [
-        "200",
+        "70",
         0
       ],
       "negative": [
-        "201",
+        "71",
         0
       ],
       "latent_image": [
-        "301",
+        "81",
         0
       ],
       "seed": 99,
@@ -476,11 +480,11 @@
       "denoise": 0.6
     }
   },
-  "303": {
+  "83": {
     "class_type": "VAEDecode",
     "inputs": {
       "samples": [
-        "302",
+        "82",
         0
       ],
       "vae": [
@@ -489,11 +493,11 @@
       ]
     }
   },
-  "304": {
+  "84": {
     "class_type": "VAEEncode",
     "inputs": {
       "pixels": [
-        "303",
+        "83",
         0
       ],
       "vae": [
@@ -502,20 +506,20 @@
       ]
     }
   },
-  "305": {
+  "85": {
     "class_type": "SetLatentNoiseMask",
     "inputs": {
       "samples": [
-        "304",
+        "84",
         0
       ],
       "mask": [
-        "101",
+        "61",
         0
       ]
     }
   },
-  "306": {
+  "86": {
     "class_type": "KSampler",
     "inputs": {
       "model": [
@@ -523,15 +527,15 @@
         0
       ],
       "positive": [
-        "202",
+        "72",
         0
       ],
       "negative": [
-        "203",
+        "73",
         0
       ],
       "latent_image": [
-        "305",
+        "85",
         0
       ],
       "seed": 100,
@@ -543,11 +547,11 @@
       "denoise": 0.6
     }
   },
-  "307": {
+  "87": {
     "class_type": "VAEDecode",
     "inputs": {
       "samples": [
-        "306",
+        "86",
         0
       ],
       "vae": [
@@ -556,11 +560,11 @@
       ]
     }
   },
-  "308": {
+  "88": {
     "class_type": "VAEEncode",
     "inputs": {
       "pixels": [
-        "307",
+        "87",
         0
       ],
       "vae": [
@@ -569,20 +573,20 @@
       ]
     }
   },
-  "309": {
+  "89": {
     "class_type": "SetLatentNoiseMask",
     "inputs": {
       "samples": [
-        "308",
+        "88",
         0
       ],
       "mask": [
-        "103",
+        "63",
         0
       ]
     }
   },
-  "310": {
+  "90": {
     "class_type": "KSampler",
     "inputs": {
       "model": [
@@ -590,15 +594,15 @@
         0
       ],
       "positive": [
-        "204",
+        "74",
         0
       ],
       "negative": [
-        "205",
+        "75",
         0
       ],
       "latent_image": [
-        "309",
+        "89",
         0
       ],
       "seed": 101,
@@ -610,11 +614,11 @@
       "denoise": 0.85
     }
   },
-  "311": {
+  "91": {
     "class_type": "VAEDecode",
     "inputs": {
       "samples": [
-        "310",
+        "90",
         0
       ],
       "vae": [
@@ -623,27 +627,27 @@
       ]
     }
   },
-  "312": {
+  "92": {
     "class_type": "LoadImage",
     "inputs": {
       "image": "stone_patches_in_grass.png"
     }
   },
-  "313": {
+  "93": {
     "class_type": "ImageToMask",
     "inputs": {
       "image": [
-        "312",
+        "92",
         0
       ],
       "channel": "red"
     }
   },
-  "314": {
+  "94": {
     "class_type": "VAEEncode",
     "inputs": {
       "pixels": [
-        "311",
+        "91",
         0
       ],
       "vae": [
@@ -652,20 +656,20 @@
       ]
     }
   },
-  "315": {
+  "95": {
     "class_type": "SetLatentNoiseMask",
     "inputs": {
       "samples": [
-        "314",
+        "94",
         0
       ],
       "mask": [
-        "313",
+        "93",
         0
       ]
     }
   },
-  "316": {
+  "96": {
     "class_type": "KSampler",
     "inputs": {
       "model": [
@@ -681,7 +685,7 @@
         0
       ],
       "latent_image": [
-        "315",
+        "95",
         0
       ],
       "seed": 102,
@@ -693,11 +697,11 @@
       "denoise": 0.75
     }
   },
-  "317": {
+  "97": {
     "class_type": "VAEDecode",
     "inputs": {
       "samples": [
-        "316",
+        "96",
         0
       ],
       "vae": [
@@ -706,14 +710,37 @@
       ]
     }
   },
-  "318": {
+  "98": {
     "class_type": "SaveImage",
     "inputs": {
       "images": [
-        "317",
+        "97",
         0
       ],
-      "filename_prefix": "phase5c_after_smart_inpaint"
+      "filename_prefix": "after_inpaint_full_grid"
+    }
+  },
+  "110": {
+    "class_type": "ImageCrop",
+    "inputs": {
+      "image": [
+        "97",
+        0
+      ],
+      "x": 640,
+      "y": 640,
+      "width": 256,
+      "height": 256
+    }
+  },
+  "111": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "110",
+        0
+      ],
+      "filename_prefix": "final_center_crop"
     }
   }
 }
